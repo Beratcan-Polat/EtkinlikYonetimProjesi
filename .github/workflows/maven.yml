@@ -1,0 +1,56 @@
+name: CI - Maven Derleme Süreci
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: etkinlik_yonetim
+          MYSQL_USER: etkinlik_user
+          MYSQL_PASSWORD: Etkinlik123!
+          MYSQL_ROOT_PASSWORD: root123
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot123"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Depoyu Kontrol Et
+        uses: actions/checkout@v4
+
+      - name: JDK 17 Kurulumu
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: MySQL hazır olana kadar bekle
+        run: |
+          for i in {1..40}; do
+            if mysqladmin ping -h 127.0.0.1 -uroot -proot123 --silent; then
+              echo "MySQL hazır"
+              break
+            fi
+            echo "MySQL bekleniyor..."
+            sleep 3
+          done
+
+      - name: Maven Test + Build
+        env:
+          SPRING_DATASOURCE_URL: jdbc:mysql://127.0.0.1:3306/etkinlik_yonetim?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8
+          SPRING_DATASOURCE_USERNAME: etkinlik_user
+          SPRING_DATASOURCE_PASSWORD: Etkinlik123!
+        run: mvn clean verify
