@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Etkinlik Listesi - Admin</title>
+    <link rel="stylesheet" th:href="@{/style.css}" href="/style.css">
+</head>
+
+<body>
+<div class="app-shell">
+
+    <!-- Sol Menü -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-pill"></div>
+            <span>Admin Paneli</span>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Yönetim</div>
+            <div class="nav-group">
+                <a th:href="@{/admin/panel}" class="nav-link">
+                    <span class="icon">🏠</span><span>Genel Panel</span>
+                </a>
+                <a th:href="@{/admin/etkinlikler/onay-bekleyen}" class="nav-link">
+                    <span class="icon">⏳</span><span>Onay Bekleyen Etkinlikler</span>
+                </a>
+                <a th:href="@{/admin/etkinlikler}" class="nav-link active">
+                    <span class="icon">📋</span><span>Tüm Etkinlikler</span>
+                </a>
+                <a th:href="@{/admin/kullanicilar}" class="nav-link">
+                    <span class="icon">👥</span><span>Kullanıcı Yönetimi</span>
+                </a>
+            </div>
+        </div>
+
+		<div class="nav-footer">
+			            <div>Yönetici</div>
+			            <div>© 2025</div>
+			        </div>
+    </aside>
+
+    <!-- İçerik -->
+    <main class="main-area">
+
+        <header class="main-header">
+            <div>
+                <div class="main-title">Tüm Etkinlikler</div>
+                <div class="main-subtitle">Sisteme kayıtlı tüm etkinliklerin listesi.</div>
+            </div>
+            <span class="badge-role">Rol: Admin</span>
+        </header>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Etkinlik Listesi</div>
+            </div>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Başlık</th>
+                    <th>Tarih</th>
+                    <th>Yer</th>
+                    <th>Kontenjan</th>
+                    <th>Durum</th>
+                    <th>Organizatör</th>
+                    <th>İşlemler</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="e : ${liste}">
+                    <td th:text="${e.id}">1</td>
+
+                    <td th:text="${e.baslik}">Etkinlik</td>
+
+                    <td th:text="${#temporals.format(e.tarih, 'dd.MM.yyyy HH:mm')}">
+                        12.12.2025 14:00
+                    </td>
+
+                    <td th:text="${e.yer}">İstanbul</td>
+
+                    <td th:text="${e.kontenjan}">50</td>
+
+					<td>
+					    <span class="badge-status"
+					          th:classappend="${e.durum == 'ONAYLANDI' ? 'badge-onayli' :
+					                           (e.durum == 'BEKLIYOR' ? 'badge-bekleyen' : 'badge-reddedildi')}"
+					          th:text="${e.durum}">
+					        ONAYLANDI
+					    </span>
+					</td>
+
+
+                    <td th:text="${e.olusturan.adSoyad}">Organizatör Adı</td>
+
+                    <td>
+						<a th:href="@{'/admin/etkinlik/katilim/' + ${e.id}}" class="btn btn-outline">Katılımcılar</a>
+
+                        <a th:href="@{'/admin/etkinlik/duzenle/' + ${e.id}}"
+                           class="btn btn-outline">
+                            Düzenle
+                        </a>
+
+                        <form th:action="@{'/admin/etkinlik/sil/' + ${e.id}}"
+                              method="post"
+                              style="display:inline;"
+							  onclick="return confirm('Bu etkinliği silmek istediğinizden emin misiniz?');">
+                            <button class="btn btn-danger" type="submit">Sil</button>
+                        </form>
+                    </td>
+                </tr>
+				
+                <tr th:if="${#lists.isEmpty(liste)}">
+                    <td colspan="8">Sistemde kayıtlı etkinlik bulunmamaktadır.</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+</body>
+</html>

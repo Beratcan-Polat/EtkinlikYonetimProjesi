@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Etkinlik Onayı - Admin</title>
+    <link rel="stylesheet" th:href="@{/style.css}" href="/style.css">
+</head>
+<body>
+<div class="app-shell">
+
+	<aside class="sidebar">
+	        <div class="logo">
+	            <div class="logo-pill"></div>
+	            <span>Admin Paneli</span>
+	        </div>
+
+	        <div>
+	            <div class="nav-section-title">Yönetim</div>
+	            <div class="nav-group">
+	                <a th:href="@{/admin/panel}" class="nav-link active">
+	                    <span class="icon">🏠</span><span>Genel Panel</span>
+	                </a>
+	                <a th:href="@{/admin/etkinlikler/onay-bekleyen}" class="nav-link">
+	                    <span class="icon">⏳</span><span>Onay Bekleyen Etkinlikler</span>
+	                </a>
+					<a th:href="@{/admin/etkinlikler}" class="nav-link">
+					    <span class="icon">📋</span><span>Tüm Etkinlikler</span>
+					</a>
+	                <a th:href="@{/admin/kullanicilar}" class="nav-link">
+	                    <span class="icon">👥</span><span>Kullanıcı Yönetimi</span>
+	                </a>
+	            </div>
+	        </div>
+
+	        <div class="nav-footer">
+	            <div>Yönetici</div>
+	            <div>© 2025</div>
+	        </div>
+	    </aside>
+
+    <main class="main-area">
+        <header class="main-header">
+            <div>
+                <div class="main-title">Onay Bekleyen Etkinlikler</div>
+                <div class="main-subtitle">Organizatörler tarafından oluşturulan ve onay bekleyen etkinlikler.</div>
+            </div>
+            <span class="badge-role">Rol: Admin</span>
+        </header>
+
+        <div class="card">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Başlık</th>
+                    <th>Organizatör</th>
+                    <th>Tarih</th>
+                    <th>Yer</th>
+                    <th>Kontenjan</th>
+                    <th>İşlemler</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="e : ${liste}">
+                    <td th:text="${e.baslik}">Başlık</td>
+                    <td th:text="${e.olusturan.adSoyad}">Organizatör</td>
+                    <td th:text="${#temporals.format(e.tarih, 'dd.MM.yyyy HH:mm')}">Tarih</td>
+                    <td th:text="${e.yer}">Yer</td>
+                    <td th:text="${e.kontenjan}">50</td>
+                    <td>
+                        <form th:action="@{'/admin/etkinlik/onayla/' + ${e.id}}"
+                              method="post" style="display:inline">
+                            <button class="btn btn-primary" type="submit">Onayla</button>
+                        </form>
+                        <form th:action="@{'/admin/etkinlik/reddet/' + ${e.id}}"
+                              method="post" style="display:inline">
+                            <button class="btn btn-danger" type="submit">Reddet</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(liste)}">
+                    <td colspan="6">Şu anda onay bekleyen etkinlik bulunmuyor.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

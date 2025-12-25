@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Etkinlik Düzenle - Admin</title>
+    <link rel="stylesheet" th:href="@{/style.css}" href="/style.css">
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- SOL MENÜ -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-pill"></div>
+            <span>Admin Paneli</span>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Yönetim</div>
+            <div class="nav-group">
+                <a th:href="@{/admin/panel}" class="nav-link">
+                    <span class="icon">🏠</span><span>Genel Panel</span>
+                </a>
+                <a th:href="@{/admin/etkinlikler/onay-bekleyen}" class="nav-link">
+                    <span class="icon">⏳</span><span>Onay Bekleyenler</span>
+                </a>
+                <a th:href="@{/admin/etkinlikler}" class="nav-link active">
+                    <span class="icon">📅</span><span>Tüm Etkinlikler</span>
+                </a>
+                <a th:href="@{/admin/kullanicilar}" class="nav-link">
+                    <span class="icon">👥</span><span>Kullanıcı Yönetimi</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-footer">Admin</div>
+    </aside>
+
+    <!-- ANA İÇERİK -->
+    <main class="main-area">
+
+        <header class="main-header">
+            <div>
+                <div class="main-title">Etkinliği Düzenle</div>
+                <div class="main-subtitle">Etkinlik bilgilerini güncelleyebilir ve durumunu değiştirebilirsiniz.</div>
+            </div>
+            <span class="badge-role">Rol: Admin</span>
+        </header>
+
+        <div class="card">
+
+            <form th:action="@{'/admin/etkinlik/duzenle/' + ${etkinlik.id}}"
+                  th:object="${etkinlik}"
+                  method="post"
+                  class="form-grid form-row-2">
+
+                <!-- BAŞLIK -->
+                <div>
+                    <label>Başlık</label>
+                    <input type="text" th:field="*{baslik}" required>
+                </div>
+
+                <!-- TARİH -->
+                <div>
+                    <label>Tarih</label>
+                    <input type="datetime-local" th:value="${#temporals.format(etkinlik.tarih, 'yyyy-MM-dd''T''HH:mm')}"
+                           name="tarih" required>
+                </div>
+
+                <!-- YER -->
+                <div>
+                    <label>Yer</label>
+                    <input type="text" th:field="*{yer}">
+                </div>
+
+                <!-- KONTENJAN -->
+                <div>
+                    <label>Kontenjan</label>
+                    <input type="number" th:field="*{kontenjan}" min="1" required>
+                </div>
+
+                <!-- AÇIKLAMA -->
+                <div style="grid-column: 1 / -1;">
+                    <label>Açıklama</label>
+                    <textarea th:field="*{aciklama}" rows="5"></textarea>
+                </div>
+
+                <!-- DURUM -->
+                <div>
+                    <label>Durum</label>
+                    <select th:field="*{durum}">
+                        <option value="ONAYLANDI">Onaylandı</option>
+                        <option value="BEKLIYOR">Onay Bekliyor</option>
+                        <option value="REDDEDILDI">Reddedildi</option>
+                    </select>
+                </div>
+
+                <!-- ORGANİZATÖR BİLGİSİ (readonly) -->
+                <div>
+                    <label>Oluşturan</label>
+                    <input type="text" th:value="${etkinlik.olusturan.adSoyad}" readonly>
+                </div>
+
+                <!-- BUTONLAR -->
+                <div style="grid-column: 1 / -1; display:flex; justify-content: flex-end; gap:10px;">
+
+                    <a th:href="@{/admin/etkinlikler}" class="btn btn-outline">Geri Dön</a>
+
+                    <button type="submit" class="btn btn-primary">
+                        Kaydet
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Organizatör Paneli</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+<div class="app-shell">
+
+    <!-- Sol Menü -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-pill"></div>
+            <span>Organizatör Paneli</span>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Etkinlik Yönetimi</div>
+            <div class="nav-group">
+
+                <a th:href="@{/organizator/panel}" class="nav-link active">
+                    <span class="icon">🏠</span>
+                    <span>Genel Panel</span>
+                </a>
+
+                <a th:href="@{/organizator/etkinlik/olustur}" class="nav-link">
+                    <span class="icon">➕</span>
+                    <span>Etkinlik Oluştur</span>
+                </a>
+
+                <a th:href="@{/organizator/etkinliklerim}" class="nav-link">
+                    <span class="icon">📋</span>
+                    <span>Etkinliklerim</span>
+                </a>
+
+            </div>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Hesap</div>
+            <div class="nav-group">
+                <a th:href="@{/organizator/profil}" class="nav-link">
+                    <span class="icon">👤</span>
+                    <span>Profilim</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-footer">
+            <div>Organizatör</div>
+            <div>© 2025</div>
+        </div>
+    </aside>
+
+    <!-- Sağ İçerik -->
+    <main class="main-area">
+
+        <header class="main-header">
+            <div>
+                <div class="main-title">
+                    Hoş geldin
+                    <span th:text="${username}">kullanıcı</span> 🎉
+                </div>
+                <div class="main-subtitle">
+                    Etkinlik oluşturabilir ve yönetebilirsin.
+                </div>
+            </div>
+
+            <span class="badge-role">Rol: Organizatör</span>
+
+            <form th:action="@{/cikis}" method="post">
+                <button type="submit" class="logout-button">Çıkış Yap</button>
+            </form>
+        </header>
+
+        <!-- Özet Kartları -->
+        <div class="card">
+            <div class="card-title">Hızlı Özet</div>
+
+            <div style="display:flex; gap:20px; flex-wrap:wrap; margin-top:20px;">
+
+                <div class="card" style="flex:1; min-width:260px;">
+                    <div class="card-title">Toplam Etkinliğim</div>
+                    <div style="font-size:2rem; font-weight:600; color:#93c5fd;"
+                         th:text="${toplamEtkinligim}">0</div>
+                </div>
+
+                <div class="card" style="flex:1; min-width:260px;">
+                    <div class="card-title">Onaylanan Etkinliklerim</div>
+                    <div style="font-size:2rem; font-weight:600; color:#bbf7d0;"
+                         th:text="${onaylananEtkinlikler}">0</div>
+                </div>
+
+                <div class="card" style="flex:1; min-width:260px;">
+                    <div class="card-title">Onay Bekleyenler</div>
+                    <div style="font-size:2rem; font-weight:600; color:#fcd34d;"
+                         th:text="${onayBekleyen}">0</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Hızlı İşlemler -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Hızlı İşlemler</div>
+            </div>
+
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                <a th:href="@{/organizator/etkinlik/olustur}" class="btn btn-primary">
+                    Etkinlik Oluştur
+                </a>
+
+                <a th:href="@{/organizator/etkinliklerim}" class="btn btn-outline">
+                    Etkinliklerimi Görüntüle
+                </a>
+            </div>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>

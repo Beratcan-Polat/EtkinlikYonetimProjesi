@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Benim Etkinliklerim</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+<div class="app-shell">
+
+    <!-- Sol Menü -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-pill"></div>
+            <span>Organizatör Paneli</span>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Etkinlik Yönetimi</div>
+            <div class="nav-group">
+                <a th:href="@{/organizator/panel}" class="nav-link">
+                    <span class="icon">🏠</span><span>Genel Panel</span>
+                </a>
+
+                <a th:href="@{/organizator/etkinlik/olustur}" class="nav-link">
+                    <span class="icon">➕</span><span>Etkinlik Oluştur</span>
+                </a>
+
+                <!-- ❗ BURASI DÜZELTİLDİ -->
+                <a th:href="@{/organizator/etkinliklerim}"
+                   class="nav-link active">
+                    <span class="icon">📋</span><span>Etkinliklerim</span>
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Hesap</div>
+            <div class="nav-group">
+                <a th:href="@{/organizator/profil}" class="nav-link">
+                    <span class="icon">👤</span><span>Profilim</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-footer">
+            <div>Organizatör</div>
+            <div>© 2025</div>
+        </div>
+    </aside>
+
+    <!-- İçerik -->
+    <main class="main-area">
+
+        <header class="main-header">
+            <div>
+                <div class="main-title">Etkinliklerim</div>
+                <div class="main-subtitle">
+                    Oluşturduğun tüm etkinlikleri buradan yönetebilirsin.
+                </div>
+            </div>
+
+            <span class="badge-role">Rol: Organizatör</span>
+
+            <form th:action="@{/cikis}" method="post">
+                <button type="submit" class="logout-button">Çıkış Yap</button>
+            </form>
+        </header>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Benim Etkinliklerim</div>
+            </div>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Başlık</th>
+                    <th>Tarih</th>
+                    <th>Yer</th>
+                    <th>Durum</th>
+                    <th>İşlemler</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="e : ${liste}">
+                    <td th:text="${e.baslik}"></td>
+                    <td th:text="${#temporals.format(e.tarih, 'dd.MM.yyyy HH:mm')}"></td>
+                    <td th:text="${e.yer}"></td>
+                    <td>
+                        <span th:if="${e.durum == 'ONAYLANDI'}" class="badge-success">Onaylandı</span>
+                        <span th:if="${e.durum == 'ONAY_BEKLIYOR'}" class="badge-warning">Onay Bekliyor</span>
+                        <span th:if="${e.durum == 'REDDEDILDI'}" class="badge-danger">Reddedildi</span>
+                    </td>
+                    <td>
+                        <a th:href="@{'/organizator/etkinlik/duzenle/' + ${e.id}}"
+                           class="btn btn-outline">Düzenle</a>
+
+                        <a th:href="@{'/organizator/etkinlik/katilim/' + ${e.id}}"
+                           class="btn btn-primary">Katılım Listesi</a>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(liste)}">
+                    <td colspan="5">Henüz bir etkinlik oluşturmadınız.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>

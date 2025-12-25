@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kayıt Ol - Etkinlik Yönetim Sistemi</title>
+    <link rel="stylesheet" th:href="@{/style.css}" href="/style.css">
+</head>
+<body>
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-title">Kayıt Ol ✨</div>
+        <div class="auth-subtitle">Etkinliklere katılmak için bir hesap oluştur.</div>
+
+        <form th:action="@{/kayit}" method="post" class="form-grid form-row-2">
+            <div>
+                <label>Ad Soyad</label>
+                <input type="text" name="adSoyad" required>
+            </div>
+            <div>
+                <label>Kullanıcı Adı</label>
+                <input type="text" name="kullaniciAdi" required>
+            </div>
+            <div>
+                <label>E-posta</label>
+                <input type="email" name="eposta" required>
+            </div>
+            <div>
+                <label>Telefon</label>
+                <input type="text" name="telefon" required>
+            </div>
+            <div>
+                <label>Şifre</label>
+                <input type="password" name="sifre" required>
+            </div>
+            <div>
+                <label>Şifre (Tekrar)</label>
+                <input type="password" name="sifreTekrar" required>
+            </div>
+
+            <div style="grid-column: 1 / -1; display:flex; justify-content: space-between; align-items:center; margin-top:4px">
+                <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+                <a th:href="@{/giris}" class="btn btn-outline">Zaten hesabım var</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

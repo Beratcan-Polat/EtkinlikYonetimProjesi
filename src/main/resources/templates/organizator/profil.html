@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profilim - Organizatör</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+<div class="app-shell">
+
+    <!-- SOL MENÜ -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-pill"></div>
+            <span>Organizatör Paneli</span>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Etkinlik Yönetimi</div>
+            <div class="nav-group">
+                <a th:href="@{/organizator/panel}" class="nav-link">
+                    <span class="icon">🏠</span><span>Genel Panel</span>
+                </a>
+
+                <a th:href="@{/organizator/etkinlik/olustur}" class="nav-link">
+                    <span class="icon">➕</span><span>Etkinlik Oluştur</span>
+                </a>
+
+                <a th:href="@{/organizator/etkinliklerim}" class="nav-link">
+                    <span class="icon">📋</span><span>Etkinliklerim</span>
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Hesap</div>
+            <div class="nav-group">
+                <a th:href="@{/organizator/profil}" class="nav-link active">
+                    <span class="icon">👤</span><span>Profilim</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-footer">
+            <div>Organizatör</div>
+            <div>© 2025</div>
+        </div>
+    </aside>
+
+
+    <!-- SAĞ İÇERİK -->
+    <main class="main-area">
+
+        <header class="main-header">
+            <div>
+                <div class="main-title">
+                    Profilim – <span th:text="${kullanici.kullaniciAdi}">kullanici</span> 👤
+                </div>
+                <div class="main-subtitle">Bilgilerini buradan güncelleyebilirsin.</div>
+            </div>
+
+            <span class="badge-role">Rol: Organizatör</span>
+
+            <form th:action="@{/cikis}" method="post">
+                <button type="submit" class="logout-button">Çıkış Yap</button>
+            </form>
+        </header>
+
+
+        <!-- PROFIL FORMU -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Profil Bilgileri</div>
+            </div>
+
+            <form th:action="@{/organizator/profil/guncelle}" 
+                  method="post"
+                  th:object="${kullanici}"
+                  class="form-grid form-row-2">
+
+                <!-- Ad Soyad -->
+                <div>
+                    <label>Ad Soyad</label>
+                    <input type="text" th:field="*{adSoyad}" required>
+                </div>
+
+                <!-- Kullanıcı Adı (readonly) -->
+                <div>
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" th:field="*{kullaniciAdi}" readonly>
+                </div>
+
+                <!-- E-posta -->
+                <div>
+                    <label>E-posta</label>
+                    <input type="email" th:field="*{eposta}" required>
+                </div>
+
+                <!-- Telefon -->
+                <div>
+                    <label>Telefon</label>
+                    <input type="text" th:field="*{telefon}" required>
+                </div>
+
+                <div style="grid-column: 1 / -1; margin-top: 12px;">
+                    <button type="submit" class="btn btn-primary">Bilgilerimi Güncelle</button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+</body>
+</html>

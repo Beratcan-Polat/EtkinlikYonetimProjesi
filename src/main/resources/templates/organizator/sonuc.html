@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bilgi</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<div class="app-shell">
+
+    <main class="main-area">
+        <div class="card">
+            <div class="card-title">Bilgilendirme</div>
+
+            <p th:text="${mesaj}" style="font-size:1.2rem; margin-top:10px;"></p>
+
+            <a th:href="@{/organizator/panel}" class="btn btn-primary" style="margin-top:20px;">
+                PaneIe Dön
+            </a>
+        </div>
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tüm Etkinlikler</title>
+    <link rel="stylesheet" th:href="@{/style.css}" href="/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+    <!-- Sol Menü -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-pill"></div>
+            <span>Katılımcı Paneli</span>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Etkinlikler</div>
+            <div class="nav-group">
+                <a th:href="@{/etkinlik/list}" class="nav-link active">
+                    <span class="icon">📅</span><span>Tüm Etkinlikler</span>
+                </a>
+                <a th:href="@{/katilimci/etkinliklerim(kullaniciAdi=${#authentication.name})}"
+                   class="nav-link">
+                    <span class="icon">⭐</span><span>Katıldıklarım</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-section-title">Hesap</div>
+        <div class="nav-group">
+            <a th:href="@{/katilimci/profil}" class="nav-link">
+                <span class="icon">👤</span><span>Profilim</span>
+            </a>
+            <a th:href="@{/cikis}" class="nav-link">
+                <span class="icon">⏻</span><span>Çıkış</span>
+            </a>
+        </div>
+
+        <div class="nav-footer">Katılımcı</div>
+    </aside>
+
+    <!-- İçerik -->
+    <main class="main-area">
+
+        <header class="main-header">
+            <div>
+                <div class="main-title">Tüm Etkinlikler</div>
+                <div class="main-subtitle">Katılabileceğin tüm onaylanmış etkinlikler.</div>
+            </div>
+            <span class="badge-role">Rol: Katılımcı</span>
+        </header>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Etkinlik Listesi</div>
+            </div>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Başlık</th>
+                    <th>Tarih</th>
+                    <th>Yer</th>
+                    <th>Kontenjan</th>
+                    <th>İşlem</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="e : ${liste}">
+                    <td th:text="${e.baslik}">Etkinlik</td>
+                    <td th:text="${#temporals.format(e.tarih, 'dd.MM.yyyy HH:mm')}">01.01.2025</td>
+                    <td th:text="${e.yer}">İstanbul</td>
+                    <td th:text="${e.kontenjan}">50</td>
+
+                    <td>
+
+                        <!-- Eğer kullanıcı bu etkinliğe katılmışsa -->
+                        <span th:if="${e.katilimYapmis}" class="badge-status badge-onayli">
+                            Katıldın ✔
+                        </span>
+
+                        <!-- Eğer kullanıcı katılmamışsa -->
+                        <a th:if="${!e.katilimYapmis}"
+                           th:href="@{'/katilimci/etkinlik/katil/' + ${e.id}}"
+                           class="btn btn-primary">
+                            Katıl
+                        </a>
+
+                        <a th:href="@{'/katilimci/etkinlik/detay/' + ${e.id}}"
+                           class="btn btn-outline">
+                            Detay
+                        </a>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(liste)}">
+                    <td colspan="5">Hiç etkinlik bulunamadı.</td>
+                </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+</body>
+</html>

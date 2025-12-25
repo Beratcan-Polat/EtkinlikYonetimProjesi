@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Giriş Yap - Etkinlik Yönetim Sistemi</title>
+    <link rel="stylesheet" th:href="@{/style.css}" href="/style.css">
+</head>
+<body>
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-title">Hoş geldin 👋</div>
+        <div class="auth-subtitle">Etkinliklere katılmak için hesabına giriş yap.</div>
+
+        <div th:if="${param.hata}" class="alert alert-error">
+            Kullanıcı adı veya şifre hatalı.
+        </div>
+        <div th:if="${param.cikis}" class="alert alert-success">
+            Başarıyla çıkış yaptınız.
+        </div>
+
+        <form th:action="@{/giris-islem}" method="post" class="form-grid">
+            <div>
+                <label for="username">Kullanıcı Adı</label>
+                <input type="text" id="username" name="username" required autocomplete="username">
+            </div>
+            <div>
+                <label for="password">Şifre</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password">
+            </div>
+
+            <button class="btn btn-primary" type="submit">
+                Giriş Yap
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Hesabın yok mu?
+            <a th:href="@{/kayit}">Hemen kayıt ol</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

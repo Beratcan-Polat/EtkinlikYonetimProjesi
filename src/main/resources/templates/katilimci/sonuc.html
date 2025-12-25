@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>İşlem Sonucu</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <div class="auth-title">Bilgilendirme</div>
+
+        <div th:classappend="${mesaj != null and (mesaj.contains('başarı') or mesaj.contains('olundu')) 
+                              ? ' alert-success' 
+                              : ' alert-error'}"
+             class="alert">
+            <span th:text="${mesaj}">İşlem sonucu mesajı.</span>
+        </div>
+
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:10px;">
+
+            <a th:href="@{/katilimci/panel}" class="btn btn-outline">
+                Panele Dön
+            </a>
+
+            <!-- ✔ PARAMETRESİZ VE GÜVENLİ -->
+            <a th:href="@{/katilimci/etkinliklerim}" class="btn btn-primary">
+                Katıldıklarımı Gör
+            </a>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

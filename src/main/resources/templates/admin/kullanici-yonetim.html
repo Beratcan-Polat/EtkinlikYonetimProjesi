@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kullanıcı Yönetimi</title>
+    <link rel="stylesheet" th:href="@{/style.css}" href="/style.css">
+</head>
+
+<body>
+<div class="app-shell">
+
+    <!-- Sol Menü -->
+	<aside class="sidebar">
+	        <div class="logo">
+	            <div class="logo-pill"></div>
+	            <span>Admin Paneli</span>
+	        </div>
+
+	        <div>
+	            <div class="nav-section-title">Yönetim</div>
+	            <div class="nav-group">
+	                <a th:href="@{/admin/panel}" class="nav-link active">
+	                    <span class="icon">🏠</span><span>Genel Panel</span>
+	                </a>
+	                <a th:href="@{/admin/etkinlikler/onay-bekleyen}" class="nav-link">
+	                    <span class="icon">⏳</span><span>Onay Bekleyen Etkinlikler</span>
+	                </a>
+					<a th:href="@{/admin/etkinlikler}" class="nav-link">
+					    <span class="icon">📋</span><span>Tüm Etkinlikler</span>
+					</a>
+	                <a th:href="@{/admin/kullanicilar}" class="nav-link">
+	                    <span class="icon">👥</span><span>Kullanıcı Yönetimi</span>
+	                </a>
+	            </div>
+	        </div>
+
+	        <div class="nav-footer">
+	            <div>Yönetici</div>
+	            <div>© 2025</div>
+	        </div>
+	    </aside>
+
+    <!-- İçerik -->
+    <main class="main-area">
+
+        <header class="main-header">
+            <div>
+                <div class="main-title">Kullanıcı Yönetimi</div>
+                <div class="main-subtitle">Tüm kullanıcıları görüntüleyin, rollerini düzenleyin.</div>
+            </div>
+            <span class="badge-role">Rol: Admin</span>
+        </header>
+
+        <div class="card">
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Kullanıcı Adı</th>
+                    <th>Ad Soyad</th>
+                    <th>E-posta</th>
+                    <th>Telefon</th>
+                    <th>Rol</th>
+                    <th>İşlem</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="k : ${liste}">
+                    <td th:text="${k.id}">1</td>
+                    <td th:text="${k.kullaniciAdi}">admin</td>
+                    <td th:text="${k.adSoyad}">Ad Soyad</td>
+                    <td th:text="${k.eposta}">email@example.com</td>
+                    <td th:text="${k.telefon}">055555555</td>
+
+                    <td>
+                        <form th:action="@{'/admin/kullanici/rol-degistir/' + ${k.id}}"
+                              method="post"
+                              style="display:flex; gap:6px; align-items:center;">
+
+                            <select name="rol">
+                                <option th:selected="${k.rol == 'ADMIN'}" value="ADMIN">Admin</option>
+                                <option th:selected="${k.rol == 'ORGANIZATOR'}" value="ORGANIZATOR">Organizatör</option>
+                                <option th:selected="${k.rol == 'KATILIMCI'}" value="KATILIMCI">Katılımcı</option>
+                            </select>
+
+                            <button class="btn btn-primary" type="submit">Kaydet</button>
+                        </form>
+                    </td>
+
+                    <td>
+                        <!-- İstersen kullanıcı silme butonu da ekleyebiliriz -->
+                        <span class="badge-status badge-onayli"
+                              th:if="${k.rol == 'ADMIN'}">
+                              Yönetici
+                        </span>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(liste)}">
+                    <td colspan="7">Sistemde kullanıcı bulunamadı.</td>
+                </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+</body>
+</html>

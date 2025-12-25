@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tüm Etkinlikler</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-pill"></div>
+            <span>Katılımcı Paneli</span>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Etkinlikler</div>
+            <div class="nav-group">
+                <a th:href="@{/katilimci/panel}" class="nav-link">
+                    <span class="icon">🏠</span><span>Panel</span>
+                </a>
+
+                <a th:href="@{/katilimci/etkinlik/list}" class="nav-link active">
+                    <span class="icon">📅</span><span>Tüm Etkinlikler</span>
+                </a>
+
+                <a th:href="@{/katilimci/etkinliklerim}" class="nav-link">
+                    <span class="icon">⭐</span><span>Katıldıklarım</span>
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Hesap</div>
+            <div class="nav-group">
+                <a th:href="@{/katilimci/profil}" class="nav-link">
+                    <span class="icon">👤</span><span>Profil</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- İçerik -->
+    <main class="main-area">
+
+        <header class="main-header">
+            <div>
+                <div class="main-title">Tüm Etkinlikler</div>
+                <div class="main-subtitle">
+                    Onaylanmış ve katılıma açık etkinlikler
+                </div>
+            </div>
+
+            <span class="badge-role">Rol: Katılımcı</span>
+
+            <form th:action="@{/cikis}" method="post">
+                <button type="submit" class="logout-button">Çıkış Yap</button>
+            </form>
+        </header>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Etkinlik Listesi</div>
+            </div>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Başlık</th>
+                    <th>Tarih</th>
+                    <th>Yer</th>
+                    <th>Kontenjan</th>
+                    <th>İşlem</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="e : ${liste}">
+                    <td th:text="${e.baslik}"></td>
+                    <td th:text="${#temporals.format(e.tarih, 'dd.MM.yyyy HH:mm')}"></td>
+                    <td th:text="${e.yer}"></td>
+                    <td th:text="${e.kontenjan}"></td>
+
+                    <td>
+
+                        <!-- KONTENJAN DOLUYSA -->
+                        <span th:if="${e.kontenjanDolu}" class="badge-danger">
+                            Kontenjan Doldu
+                        </span>
+
+                        <!-- KATIL BUTONU -->
+                        <form th:if="${!e.kontenjanDolu and !e.katilimYapmis}"
+                              th:action="@{'/katilimci/etkinlik/katil/' + ${e.id}}"
+                              method="post">
+                            <button class="btn btn-primary" type="submit">
+                                Katıl
+                            </button>
+                        </form>
+
+                        <!-- İPTAL BUTONU -->
+                        <form th:if="${e.katilimYapmis}"
+                              th:action="@{'/katilimci/etkinlik/iptal/' + ${e.id}}"
+                              method="post">
+                            <button class="btn btn-danger" type="submit">
+                                İptal Et
+                            </button>
+                        </form>
+
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(liste)}">
+                    <td colspan="5">Henüz etkinlik bulunmuyor.</td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

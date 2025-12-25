@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Katıldığım Etkinlikler</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<div class="app-shell">
+
+    <!-- Sol Menü -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-pill"></div>
+            <span>Katılımcı Paneli</span>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Etkinlikler</div>
+            <div class="nav-group">
+                <a th:href="@{/katilimci/panel}" class="nav-link">
+                    <span class="icon">🏠</span><span>Panel</span>
+                </a>
+
+                <a th:href="@{/katilimci/etkinlik/list}" class="nav-link">
+                    <span class="icon">📅</span><span>Tüm Etkinlikler</span>
+                </a>
+
+                <a th:href="@{/katilimci/etkinliklerim}" class="nav-link active">
+                    <span class="icon">⭐</span><span>Katıldıklarım</span>
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <div class="nav-section-title">Hesap</div>
+            <div class="nav-group">
+                <a th:href="@{/katilimci/profil}" class="nav-link">
+                    <span class="icon">👤</span><span>Profilim</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- İçerik -->
+    <main class="main-area">
+
+        <header class="main-header">
+            <div>
+                <div class="main-title">Katıldığım Etkinlikler</div>
+                <div class="main-subtitle">
+                    Geçmiş ve yaklaşan etkinlikler.
+                </div>
+            </div>
+
+            <span class="badge-role">Rol: Katılımcı</span>
+
+            <form th:action="@{/cikis}" method="post">
+                <button type="submit" class="logout-button">Çıkış Yap</button>
+            </form>
+        </header>
+
+        <div class="card">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Etkinlik</th>
+                    <th>Tarih</th>
+                    <th>Yer</th>
+                    <th>Kayıt Zamanı</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="k : ${liste}">
+                    <td th:text="${k.etkinlik.baslik}">Başlık</td>
+                    <td th:text="${#temporals.format(k.etkinlik.tarih, 'dd.MM.yyyy HH:mm')}">Tarih</td>
+                    <td th:text="${k.etkinlik.yer}">Yer</td>
+                    <td th:text="${#temporals.format(k.kayitZamani, 'dd.MM.yyyy HH:mm')}">Kayıt</td>
+                    <td>
+                        <!-- ✔ KULLANICI PARAMETRESİ YOK -->
+                        <form th:action="@{'/katilimci/etkinlik/iptal/' + ${k.etkinlik.id}}"
+                              method="post">
+                            <button type="submit" class="btn btn-danger">
+                                İptal Et
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(liste)}">
+                    <td colspan="5">Henüz hiçbir etkinliğe katılmadınız.</td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
