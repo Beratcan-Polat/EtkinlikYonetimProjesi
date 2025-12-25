@@ -1,13 +1,11 @@
-name: CI - Maven Derleme Süreci
+name: CI/CD - Maven Build ve AWS EC2 Deployment
 
 on:
   push:
-    branches: [ "main", "dev" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     services:
@@ -15,32 +13,30 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_DATABASE: etkinlik_yonetim
-          MYSQL_USER: etkinlik_user
-          MYSQL_PASSWORD: Etkinlik123!
-          MYSQL_ROOT_PASSWORD: root123
+          MYSQL_ROOT_PASSWORD: 2550
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot123"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -p2550 --silent"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
 
     steps:
-      - name: Depoyu Kontrol Et
+      - name: Kodu Çek
         uses: actions/checkout@v4
 
       - name: JDK 17 Kurulumu
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
           cache: maven
 
       - name: MySQL hazır olana kadar bekle
         run: |
           for i in {1..40}; do
-            if mysqladmin ping -h 127.0.0.1 -uroot -proot123 --silent; then
+            if mysqladmin ping -h 127.0.0.1 -uroot -p2550 --silent; then
               echo "MySQL hazır"
               break
             fi
@@ -51,6 +47,35 @@ jobs:
       - name: Maven Test + Build
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://127.0.0.1:3306/etkinlik_yonetim?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf8
-          SPRING_DATASOURCE_USERNAME: etkinlik_user
-          SPRING_DATASOURCE_PASSWORD: Etkinlik123!
-        run: mvn clean verify
+          SPRING_DATASOURCE_USERNAME: root
+          SPRING_DATASOURCE_PASSWORD: 2550
+        run: mvn -B clean package
+
+      - name: JAR Dosyasını EC2'ye Gönder
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "target/*.jar"
+          target: "/home/ubuntu/"
+          strip_components: 1
+
+      - name: Sunucuda Uygulamayı Yenile (systemd restart)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            cd /home/ubuntu
+
+            # target/*.jar ile gelen dosyayı sabit isimli jar'a çevir (servis bunu çalıştırıyor)
+            LATEST_JAR=$(ls -t *.jar | head -n 1)
+            echo "Bulunan JAR: $LATEST_JAR"
+            mv -f "$LATEST_JAR" etkinlik-yonetim-sistemi-0.0.1-SNAPSHOT.jar
+
+            sudo systemctl daemon-reload
+            sudo systemctl restart etkinlik
+            sudo systemctl --no-pager --full status etkinlik | head -n 30
